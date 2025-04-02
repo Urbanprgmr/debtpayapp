@@ -25,6 +25,8 @@ function addDebtIOwe() {
     const debts = getData().debtsIOwe;
     debts.push({ name, amount });
     saveData('debtsIOwe', debts);
+    document.getElementById('owe-name').value = '';
+    document.getElementById('owe-amount').value = '';
   }
 }
 
@@ -35,6 +37,8 @@ function addDebtOwedToMe() {
     const debts = getData().debtsOwedToMe;
     debts.push({ name, amount });
     saveData('debtsOwedToMe', debts);
+    document.getElementById('owed-name').value = '';
+    document.getElementById('owed-amount').value = '';
   }
 }
 
@@ -75,4 +79,29 @@ function calculateResults() {
   document.getElementById('total-debt').innerText = `Total Debt You Owe: MVR ${totalDebtIOwe}`;
   document.getElementById('days-to-repay').innerText = `Days to Repay with ${repaymentPercent}% of MVR ${estimatedDaily}/day: ${daysToRepay} days`;
   document.getElementById('after-owed-calculation').innerText = `If debts owed to you are paid now, you still need: MVR ${afterOwedCalc > 0 ? afterOwedCalc : 0}`;
+
+  analyzeDebtPayback();
+}
+
+function analyzeDebtPayback() {
+  const data = getData();
+  const totalDebtIOwe = data.debtsIOwe.reduce((sum, d) => sum + d.amount, 0);
+  const totalDebtOwed = data.debtsOwedToMe.reduce((sum, d) => sum + d.amount, 0);
+  const { estimatedDaily = 0, repaymentPercent = 0 } = data.income;
+
+  const debtAfterReturn = totalDebtIOwe - totalDebtOwed;
+  const dailyRepayment = (estimatedDaily * repaymentPercent) / 100;
+  const days = dailyRepayment > 0 ? Math.ceil(debtAfterReturn / dailyRepayment) : 'N/A';
+
+  let resultText = `If all debts owed to you are paid back now, your remaining debt will be: MVR ${debtAfterReturn > 0 ? debtAfterReturn : 0}.`;
+
+  if (dailyRepayment > 0 && debtAfterReturn > 0) {
+    resultText += ` With MVR ${dailyRepayment.toFixed(2)} saved per day from your income, it would take approximately ${days} days to clear the remaining debt.`;
+  } else if (debtAfterReturn <= 0) {
+    resultText += ` You can fully pay your debts using only the amounts owed to you!`;
+  } else {
+    resultText += ` Please enter valid daily income and repayment percentage to calculate payoff time.`;
+  }
+
+  document.getElementById('analysis-result').innerText = resultText;
 }
