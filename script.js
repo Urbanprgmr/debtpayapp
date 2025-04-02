@@ -169,76 +169,57 @@ window.onload = () => {
   calculateResults();
 };
 
-
-let lineChartInstance;
-function renderLineChart(debtHistory) {
-  const ctx = document.getElementById('lineChart').getContext('2d');
-  if (lineChartInstance) lineChartInstance.destroy();
-
-  const labels = debtHistory.map((_, i) => `Day ${i + 1}`);
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        label: 'Remaining Debt',
-        data: debtHistory,
-        borderColor: '#f44336',
-        fill: false,
-        tension: 0.3
-      }
-    ]
-  };
-
-  lineChartInstance = new Chart(ctx, {
-    type: 'line',
-    data: data,
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: 'top' },
-        title: { display: true, text: 'Debt Reduction Over Time' }
-      }
-    }
-  });
+function renderIncomeDetails() {
+  const { dailyIncome = 0, dailyExpenses = 0, repaymentPercent = 0 } = getData().income;
+  document.getElementById('income-details').innerHTML = `
+    <p>Saved Income: MVR ${dailyIncome}</p>
+    <p>Daily Expenses: MVR ${dailyExpenses}</p>
+    <p>Repayment %: ${repaymentPercent}%</p>
+  `;
 }
 
-// Enhanced simulateStrategy with debt history tracking
-function simulateStrategy() {
+function editDebt(key, index) {
+  const newName = prompt("Edit Name:");
+  const newAmount = parseFloat(prompt("Edit Amount (MVR):"));
+  if (newName && newAmount > 0) {
+    const data = getData();
+    data[key][index] = { name: newName, amount: newAmount };
+    saveData(key, data[key]);
+  }
+}
+
+function deleteDebt(key, index) {
   const data = getData();
-  const debts = [...data.debtsIOwe];
-  const strategy = document.getElementById('strategy-select').value;
-  const repayDaily = parseFloat(document.getElementById('custom-repay').value || 0);
-  let sortedDebts = [];
+  data[key].splice(index, 1);
+  saveData(key, data[key]);
+}
 
-  if (strategy === 'snowball') {
-    sortedDebts = debts.sort((a, b) => a.amount - b.amount);
-  } else if (strategy === 'avalanche') {
-    sortedDebts = debts.sort((a, b) => b.amount - a.amount);
-  } else {
-    sortedDebts = debts;
-  }
+function renderLists() {
+  const data = getData();
+  const oweList = document.getElementById('debts-i-owe-list');
+  const owedList = document.getElementById('debts-owed-to-me-list');
 
-  let remaining = sortedDebts.map(d => d.amount);
-  let days = 0;
-  let history = [remaining.reduce((sum, amt) => sum + amt, 0)];
+  oweList.innerHTML = '';
+  data.debtsIOwe.forEach((d, i) => {
+    oweList.innerHTML += `
+      <li>${d.name} - MVR ${d.amount}
+        <div class="actions">
+          <button onclick="editDebt('debtsIOwe', ${i})">Edit</button>
+          <button onclick="deleteDebt('debtsIOwe', ${i})">Delete</button>
+        </div>
+      </li>`;
+  });
 
-  if (repayDaily > 0) {
-    while (remaining.reduce((sum, amt) => sum + amt, 0) > 0 && days < 365) {
-      for (let i = 0; i < remaining.length; i++) {
-        if (remaining[i] > 0) {
-          const payment = Math.min(remaining[i], repayDaily);
-          remaining[i] -= payment;
-          break;
-        }
-      }
-      days++;
-      history.push(remaining.reduce((sum, amt) => sum + amt, 0));
-    }
-  }
+  owedList.innerHTML = '';
+  data.debtsOwedToMe.forEach((d, i) => {
+    owedList.innerHTML += `
+      <li>${d.name} - MVR ${d.amount}
+        <div class="actions">
+          <button onclick="editDebt('debtsOwedToMe', ${i})">Edit</button>
+          <button onclick="deleteDebt('debtsOwedToMe', ${i})">Delete</button>
+        </div>
+      </li>`;
+  });
 
-  document.getElementById('strategy-results').innerText = repayDaily > 0
-    ? `Using ${strategy} strategy: You'll clear all debts in ${days} days with MVR ${repayDaily}/day.`
-    : 'Please enter a valid daily repayment amount.';
-
-  renderLineChart(history);
+  renderIncomeDetails();
 }
