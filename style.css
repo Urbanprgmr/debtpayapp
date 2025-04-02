@@ -53,15 +53,17 @@ li {
   margin: 5px 0;
   padding: 10px;
   border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-section {
-  margin-bottom: 30px;
+.actions {
+  display: flex;
+  gap: 5px;
 }
 
-#results p, #analysis p {
-  background: #f0f0f0;
-  padding: 12px;
-  border-radius: 5px;
-  margin: 8px 0;
+.actions button {
+  padding: 4px 8px;
+  font-size: 12px;
 }
