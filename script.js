@@ -75,26 +75,44 @@ function renderLists() {
 
   oweList.innerHTML = '';
   data.debtsIOwe.forEach((d, i) => {
-    oweList.innerHTML += `
-      <li>
-        ${d.name} - MVR ${d.amount}
-        <div class="actions">
-          <button onclick="editDebt('debtsIOwe', ${i})">Edit</button>
-          <button onclick="deleteDebt('debtsIOwe', ${i})">Delete</button>
-        </div>
-      </li>`;
+    const li = document.createElement('li');
+    li.innerHTML = `${d.name} - MVR ${d.amount}`;
+    const actions = document.createElement('div');
+    actions.classList.add('actions');
+
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit';
+    editBtn.onclick = () => editDebt('debtsIOwe', i);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.onclick = () => deleteDebt('debtsIOwe', i);
+
+    actions.appendChild(editBtn);
+    actions.appendChild(deleteBtn);
+    li.appendChild(actions);
+    oweList.appendChild(li);
   });
 
   owedList.innerHTML = '';
   data.debtsOwedToMe.forEach((d, i) => {
-    owedList.innerHTML += `
-      <li>
-        ${d.name} - MVR ${d.amount}
-        <div class="actions">
-          <button onclick="editDebt('debtsOwedToMe', ${i})">Edit</button>
-          <button onclick="deleteDebt('debtsOwedToMe', ${i})">Delete</button>
-        </div>
-      </li>`;
+    const li = document.createElement('li');
+    li.innerHTML = `${d.name} - MVR ${d.amount}`;
+    const actions = document.createElement('div');
+    actions.classList.add('actions');
+
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit';
+    editBtn.onclick = () => editDebt('debtsOwedToMe', i);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.onclick = () => deleteDebt('debtsOwedToMe', i);
+
+    actions.appendChild(editBtn);
+    actions.appendChild(deleteBtn);
+    li.appendChild(actions);
+    owedList.appendChild(li);
   });
 }
 
