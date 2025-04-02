@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Debt Payment Manager</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
@@ -49,6 +50,21 @@
     <section id="analysis">
       <h2>Payback Analysis</h2>
       <p id="analysis-result"></p>
+    </section>
+
+    <section id="charts">
+      <h2>Visual Dashboard</h2>
+      
+      <canvas id="debtPieChart" height="200"></canvas>
+      <canvas id="financeBarChart" height="200"></canvas>
+
+      <div id="progress-container">
+        <h3>Debt Payoff Progress</h3>
+        <div id="progress-bar-bg">
+          <div id="progress-bar-fill"></div>
+        </div>
+        <p id="progress-label"></p>
+      </div>
     </section>
   </div>
 
