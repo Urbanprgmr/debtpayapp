@@ -31,15 +31,16 @@
     </section>
 
     <section>
-      <h2>Income Setup</h2>
-      <input type="number" id="current-income" placeholder="Total Income (MVR)" />
+      <h2>Income & Expenses</h2>
       <input type="number" id="daily-income" placeholder="Estimated Daily Income (MVR)" />
-      <input type="number" id="repayment-percent" placeholder="Repayment % of Income" />
-      <button onclick="saveIncome()">Save Income</button>
+      <input type="number" id="daily-expenses" placeholder="Daily Expenses (MVR)" />
+      <input type="number" id="repayment-percent" placeholder="Repayment % of Available Income" />
+      <button onclick="saveIncomeExpense()">Save & Simulate</button>
     </section>
 
     <section id="results">
       <h2>Results</h2>
+      <p id="available-income"></p>
       <p id="total-debt"></p>
       <p id="days-to-repay"></p>
       <p id="after-owed-calculation"></p>
@@ -49,7 +50,6 @@
       <h2>Payback Analysis</h2>
       <p id="analysis-result"></p>
     </section>
-
   </div>
 
   <script src="script.js"></script>
