@@ -1,0 +1,83 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+h1, h2, h3 {
+  text-align: center;
+  color: #00796b;
+}
+.form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+input[type="text"], input[type="number"] {
+  padding: 10px;
+  flex: 1 1 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+button {
+  padding: 10px 15px;
+  background: #00796b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+li {
+  background: #e0f2f1;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.actions {
+  display: flex;
+  gap: 5px;
+}
+.actions button {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+#charts {
+  margin-top: 30px;
+}
+#progress-container {
+  margin-top: 20px;
+}
+#progress-bar-bg {
+  width: 100%;
+  background-color: #ccc;
+  height: 25px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+#progress-bar-fill {
+  height: 100%;
+  background-color: #00796b;
+  width: 0%;
+  transition: width 0.6s ease-in-out;
+}
+#progress-label {
+  text-align: center;
+  margin-top: 5px;
+}
