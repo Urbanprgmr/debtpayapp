@@ -11,24 +11,60 @@
   <div class="container">
     <h1>Debt Payment Manager (MVR)</h1>
 
-    <!-- Existing Sections (Owe, Owed, Income) -->
-    <!-- ... (Same as before) -->
-
-    <section id="strategy">
-      <h2>Repayment Strategy Simulator</h2>
-      <label>Select Strategy:
-        <select id="strategy-select">
-          <option value="snowball">Snowball (Smallest First)</option>
-          <option value="avalanche">Avalanche (Largest First)</option>
-          <option value="manual">Manual (By Order)</option>
-        </select>
-      </label>
-      <input type="number" id="custom-repay" placeholder="Custom Daily Repayment (MVR)" />
-      <button onclick="simulateStrategy()">Run Simulation</button>
-      <div id="strategy-results"></div>
+    <section>
+      <h2>Debts I Owe</h2>
+      <div class="form">
+        <input type="text" id="owe-name" placeholder="Name" />
+        <input type="number" id="owe-amount" placeholder="Amount (MVR)" />
+        <button onclick="addDebtIOwe()">Add</button>
+      </div>
+      <ul id="debts-i-owe-list"></ul>
     </section>
 
-    <!-- Existing Results, Charts, etc. -->
-    <script src="script.js"></script>
+    <section>
+      <h2>Debts Owed to Me</h2>
+      <div class="form">
+        <input type="text" id="owed-name" placeholder="Name" />
+        <input type="number" id="owed-amount" placeholder="Amount (MVR)" />
+        <button onclick="addDebtOwedToMe()">Add</button>
+      </div>
+      <ul id="debts-owed-to-me-list"></ul>
+    </section>
+
+    <section>
+      <h2>Income & Expenses</h2>
+      <input type="number" id="daily-income" placeholder="Estimated Daily Income (MVR)" />
+      <input type="number" id="daily-expenses" placeholder="Daily Expenses (MVR)" />
+      <input type="number" id="repayment-percent" placeholder="Repayment % of Available Income" />
+      <button onclick="saveIncomeExpense()">Save & Simulate</button>
+    </section>
+
+    <section id="results">
+      <h2>Results</h2>
+      <p id="available-income"></p>
+      <p id="total-debt"></p>
+      <p id="days-to-repay"></p>
+      <p id="after-owed-calculation"></p>
+    </section>
+
+    <section id="analysis">
+      <h2>Payback Analysis</h2>
+      <p id="analysis-result"></p>
+    </section>
+
+    <section id="charts">
+      <h2>Visual Dashboard</h2>
+      <canvas id="debtPieChart" height="200"></canvas>
+      <canvas id="financeBarChart" height="200"></canvas>
+      <div id="progress-container">
+        <h3>Debt Payoff Progress</h3>
+        <div id="progress-bar-bg">
+          <div id="progress-bar-fill"></div>
+        </div>
+        <p id="progress-label"></p>
+      </div>
+    </section>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
