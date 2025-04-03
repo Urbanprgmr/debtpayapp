@@ -197,70 +197,66 @@ function simulateStrategy() {
 }
 
 // Charts
-function renderBarChart(income, expenses, repay) {
-  const ctx = document.getElementById('financeBarChart').getContext('2d');
-  if (window.barChart) window.barChart.destroy();
-  window.barChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Income', 'Expenses', 'Repayment'],
-      datasets: [{
-        label: 'Daily MVR',
-        data: [income, expenses, repay],
-        backgroundColor: ['#4caf50', '#f44336', '#ff9800']
-      }]
+
+let currentPeriod = 'daily';
+let currentChart = 'line';
+
+function setPeriod(period) {
+  currentPeriod = period;
+  renderCharts();
+}
+
+function showChart(type) {
+  currentChart = type;
+  document.getElementById('lineChart').style.display = type === 'line' ? 'block' : 'none';
+  document.getElementById('financeBarChart').style.display = type === 'bar' ? 'block' : 'none';
+  renderCharts();
+}
+
+function renderCharts() {
+  const periodLabel = currentPeriod.charAt(0).toUpperCase() + currentPeriod.slice(1);
+  const income = currentPeriod === 'daily' ? 100 : currentPeriod === 'weekly' ? 700 : 3000;
+  const expenses = income * 0.6;
+  const repay = income * 0.2;
+
+  if (currentChart === 'bar') {
+    const ctx = document.getElementById('financeBarChart').getContext('2d');
+    if (window.barChart) window.barChart.destroy();
+    window.barChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Income', 'Expenses', 'Repayment'],
+        datasets: [{
+          label: `${periodLabel} Finance Overview`,
+          data: [income, expenses, repay],
+          backgroundColor: ['#4caf50', '#f44336', '#ff9800']
+        }]
+      }
+    });
+  } else if (currentChart === 'line') {
+    const ctx = document.getElementById('lineChart').getContext('2d');
+    const debt = [1000];
+    for (let i = 1; i <= 10; i++) {
+      debt.push(debt[i - 1] - repay / 2);
     }
-  });
+    if (window.lineChart) window.lineChart.destroy();
+    window.lineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: debt.map((_, i) => `${periodLabel} ${i + 1}`),
+        datasets: [{
+          label: `Debt Over ${periodLabel}s`,
+          data: debt,
+          borderColor: '#3f51b5',
+          tension: 0.3,
+          fill: false
+        }]
+      }
+    });
+  }
 }
 
-function renderLineChart(history) {
-  const ctx = document.getElementById('lineChart').getContext('2d');
-  if (window.lineChart) window.lineChart.destroy();
-  window.lineChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: history.map((_, i) => `Day ${i}`),
-      datasets: [{
-        label: 'Remaining Debt',
-        data: history,
-        borderColor: '#3f51b5',
-        fill: false,
-        tension: 0.3
-      }]
-    }
-  });
-}
-
-// Initialization
-function renderLists() {
-  const { debtsIOwe, debtsOwedToMe, income } = getData();
-  const oweList = document.getElementById('debts-i-owe-list');
-  const owedList = document.getElementById('debts-owed-to-me-list');
-  oweList.innerHTML = '';
-  owedList.innerHTML = '';
-  debtsIOwe.forEach((d, i) => {
-    oweList.innerHTML += `<li>${d.name} - MVR ${d.amount}
-      <div class="actions">
-        <button onclick="editDebt('debtsIOwe', ${i})">Edit</button>
-        <button onclick="deleteDebt('debtsIOwe', ${i})">Delete</button>
-      </div></li>`;
-  });
-  debtsOwedToMe.forEach((d, i) => {
-    owedList.innerHTML += `<li>${d.name} - MVR ${d.amount}
-      <div class="actions">
-        <button onclick="editDebt('debtsOwedToMe', ${i})">Edit</button>
-        <button onclick="deleteDebt('debtsOwedToMe', ${i})">Delete</button>
-      </div></li>`;
-  });
-  document.getElementById('income-details').innerHTML = `
-    <p>Daily Income: MVR ${income.dailyIncome}</p>
-    <p>Repayment %: ${income.repaymentPercent}%</p>
-    <button onclick="editIncome()">Edit</button>
-  `;
-}
-
-window.onload = function () {
-  renderLists();
-  renderExpenses();
-  calculateResults();
+window.onload = () => {
+  showChart('line');
+  setPeriod('daily');
 };
